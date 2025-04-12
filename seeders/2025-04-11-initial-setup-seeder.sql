@@ -7,8 +7,8 @@ INSERT INTO doctors (user_id, specialization, experience, fee, is_approved) VALU
 (2, 'Cardiology', 10, 1500.00, 1);
 
 INSERT INTO appointments (user_id, doctor_id, appointment_date, appointment_time, status, payment_status) VALUES
-(3, 1, '2025-04-15', '10:30:00', 'confirmed', 'completed'),
-(3, 1, '2025-04-20', '14:00:00', 'pending', 'pending');
+(3, 2, '2025-04-15', '10:30:00', 'confirmed', 'completed'),
+(4, 2, '2025-04-20', '14:00:00', 'pending', 'pending');
 
 INSERT INTO payments (appointment_id, amount, razorpay_order_id, razorpay_payment_id, status) VALUES
 (1, 1500.00, 'order_ABC123', 'payment_XYZ123', 'completed'),
