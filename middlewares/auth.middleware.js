@@ -16,6 +16,21 @@ const verifyToken = (req, res, next) => {
   }
 };
 
+const isAdminUser = (req, res, next) => {
+  const { username, password } = req.body;
+
+  if (
+    username === process.env.ADMIN_USERNAME &&
+    password === process.env.ADMIN_PASSWORD
+  ) {
+    next();
+  } else {
+    return res
+      .status(403)
+      .json({ message: "Access denied. Invalid admin credentials." });
+  }
+};
+
 const isAdmin = (req, res, next) => {
   if (req.user.role !== "admin") {
     return res.status(403).json({ message: "Access denied" });
@@ -34,4 +49,5 @@ module.exports = {
   verifyToken,
   isAdmin,
   isDoctor,
+  isAdminUser,
 };
