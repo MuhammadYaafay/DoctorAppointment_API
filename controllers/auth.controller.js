@@ -1,16 +1,16 @@
-const { validateResult } = require("express-validator");
+const { validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
 const pool = require("../config/db");
 const { hashedPassword, comparePassword } = require("../utils/password");
 
 const register = async (req, res) => {
   try {
-    const errors = validateResult(req);
+    const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ message: errors.array() });
     }
 
-    const { name, email, password } = req.body;
+    const { name, email, password, role } = req.body;
 
     // Check if user already exists
     const [existingUsers] = await pool.query(
@@ -47,7 +47,7 @@ const register = async (req, res) => {
 
 const login = async (req, res) => {
   try {
-    const errors = validateResult(req);
+    const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ message: errors.array() });
     }
@@ -64,7 +64,7 @@ const login = async (req, res) => {
           id: "admin",
           role: "admin",
         },
-        process.env.SECRET_KEY,
+        process.env.JWT_SECRET_KEY,
         { expiresIn: "24h" }
       );
       return res.json({
@@ -113,7 +113,7 @@ const login = async (req, res) => {
         role: user.role,
         doctorId: doctorDetails?.id,
       },
-      process.env.SECRET_KEY,
+      process.env.JWT_SECRET_KEY,
       { expiresIn: "24h" }
     );
 
