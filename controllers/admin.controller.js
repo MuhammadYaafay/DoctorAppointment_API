@@ -7,8 +7,9 @@ const getDashboardStats = async (req, res) => {
     const [appointments] = await pool.query(`
       SELECT 
         COUNT(*) AS total_appointments,
-        SUM(IF(status = 'completed', 1, 0)) AS completed_appointments,
-        SUM(IF(status = 'cancelled', 1, 0)) AS cancelled_appointments
+        SUM(IF(status = 'confirmed', 1, 0)) AS completed_appointments,
+        SUM(IF(status = 'cancelled', 1, 0)) AS cancelled_appointments,
+        SUM(IF(status = 'pending', 1, 0)) AS pending_appointments
       FROM appointments
     `);
 
@@ -28,7 +29,7 @@ const getDashboardStats = async (req, res) => {
       GROUP BY role
     `);
 
-    // Recent appointments (latest 10)
+    // Recent appointments
     const [recentAppointments] = await pool.query(`
       SELECT 
         a.id, a.appointment_date, a.appointment_time, a.status,
@@ -45,9 +46,9 @@ const getDashboardStats = async (req, res) => {
 
     res.json({
       statistics: {
-        appointments: appointments[0],
-        earnings: earnings[0]?.total_earnings || 0,
-        userCounts: users.reduce((acc, curr) => {
+        appointment: appointments[0],
+        earning: earnings[0]?.total_earnings || 0,
+        userCount: users.reduce((acc, curr) => {
           acc[curr.role] = curr.count;
           return acc;
         }, {}),
@@ -167,6 +168,11 @@ const cancelAppointmentByAdmin = async (req, res) => {
 
     await pool.query(
       'UPDATE appointments SET status = "cancelled" WHERE id = ?',
+      [appointmentId]
+    );
+
+    await pool.query(
+      'UPDATE payments SET payment_status = "cancelled" WHERE appointment_id = ?',
       [appointmentId]
     );
 

@@ -1,5 +1,5 @@
 const express = require("express");
-const { verifyToken, isAdmin } = require("../middlewares/auth.middleware");
+const { verifyToken, isAdmin, isAdminUser } = require("../middlewares/auth.middleware");
 const {
   getDashboardStats,
   getPendingDoctors,
@@ -25,7 +25,7 @@ router.patch('/doctors/:id/approve', approveDoctorRegistration);
 router.get('/users', getAllUsers);
 
 //appointment management
-router.get('/appointements', getAllAppointments);
-router.patch('/appointements/:id/cancel', cancelAppointmentByAdmin);
+router.get('/appointments', getAllAppointments);
+router.patch('/appointments/:id/cancel', cancelAppointmentByAdmin);
 
 module.exports = router;

@@ -101,10 +101,20 @@ const login = async (req, res) => {
         `SELECT * FROM doctors WHERE user_id = ?`,
         [user.id]
       );
-      if (doctors.length > 0) {
-        doctorDetails = doctors[0];
+    
+      if (doctors.length === 0) {
+        return res.status(400).json({ message: "Doctor record not found" });
       }
+    
+      const doctor = doctors[0];
+    
+      if (doctor.is_approved === 0) {
+        return res.status(403).json({ message: "Doctor account is pending approval by admin" });
+      }
+    
+      doctorDetails = doctor;
     }
+    
 
     //generate jwt
     const token = jwt.sign(
