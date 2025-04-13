@@ -4,6 +4,7 @@ const dotenv = require("dotenv");
 const adminRoutes = require("./routes/admin.routes.js");
 const authRoutes = require("./routes/auth.routes.js");
 const doctorRoutes = require("./routes/doctor.routes.js");
+const appointmentRoutes = require("./routes/appointment.routes.js");
 
 dotenv.config();
 
@@ -18,6 +19,7 @@ app.use(express.json());
 app.use("/api/admin", adminRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/doctor", doctorRoutes);
+app.use("/api/appointments", appointmentRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
